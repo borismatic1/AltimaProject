@@ -13,8 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 /**
  *
@@ -24,15 +22,13 @@ public class Department {
 
     private int id;
     private String department_name;
-    Logger log=Logger.getLogger("model/Department");
-    File propertiesFile = new File("src/altimaproject/log4j.properties");
     
     public Department() {
         super();
     }
 
+    
     public void insertSQL(String department_name) throws SQLException {
-        PropertyConfigurator.configure(propertiesFile.toString());
         Connection cd = new ConnectionDatabase().connect();
         String addDepartment = "INSERT INTO department\n"
                 + "(department_name)\n"
@@ -46,7 +42,7 @@ public class Department {
             add.executeUpdate();
             cd.commit();
             System.out.println("Successful entry!");
-            log.debug("debug");
+            
             
         } catch (SQLException ex) {
             ex.printStackTrace();
