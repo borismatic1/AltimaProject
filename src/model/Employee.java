@@ -11,10 +11,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
- *
+ * Class for manipulating Employee data
  * @author Win7
  */
 public class Employee {
@@ -30,12 +32,26 @@ public class Employee {
         super();
     }
 
+    private static final Logger log = LogManager.getLogger(Department.class);
+    
+    /**
+     * Add data to employee table in database.
+     *
+     * @param name name of employee
+     * @param surname last name of employee
+     * @param street street where employee lives
+     * @param city city where employee lives
+     * @param department_id id of department where employee works
+     * @param supervisor_id id of employees supervisor
+     * @throws SQLException exception handling
+     */
     public void insertSQL(String name, String surname, String street, String city, int department_id, int supervisor_id) throws SQLException {
         Connection cd = new ConnectionDatabase().connect();
         String addEmployee = "INSERT INTO employee\n"
                 + "(employee_name, street, city, department_id, supervisor_id)\n"
                 + "VALUES (?,?,?,?,?)";
 
+        log.info(addEmployee);
         PreparedStatement add = cd.prepareStatement(addEmployee);
         try {
             cd.setAutoCommit(false);
@@ -49,7 +65,7 @@ public class Employee {
             System.out.println("Successful entry!");
             
         } catch (SQLException ex) {
-            Logger.getLogger(Department.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         } finally {
             if (add != null) {
                 add.close();
@@ -62,11 +78,18 @@ public class Employee {
 
     }
 
+    /**
+     * Delete data from employee table in database.
+     *
+     * @param id id of employee
+     * @throws SQLException exception handling
+     */
     public void deleteSQL(int id) throws SQLException {
         Connection cd = new ConnectionDatabase().connect();
         String deleteEmployee = "DELETE FROM employee\n"
                 + "WHERE id=(?)";
 
+        log.info(deleteEmployee);
         PreparedStatement add = cd.prepareStatement(deleteEmployee);
         try {
             cd.setAutoCommit(false);
@@ -75,7 +98,7 @@ public class Employee {
             cd.commit();
             System.out.println("Successful delete!");
         } catch (SQLException ex) {
-            Logger.getLogger(Department.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         } finally {
             if (add != null) {
                 add.close();
@@ -87,6 +110,11 @@ public class Employee {
         }
     }
 
+    /**
+     * Finds employee who works on most projects.
+     *
+     * @throws SQLException exception handling
+     */
     public void mostProjects() throws SQLException {
         Connection cd = new ConnectionDatabase().connect();
         String mostProjects = "select employee_name \n"
@@ -97,6 +125,7 @@ public class Employee {
                 + "order by count(*) desc\n"
                 + "limit 1";
         
+        log.info(mostProjects);
         PreparedStatement add = cd.prepareStatement(mostProjects);
         try {
             ResultSet rs=add.executeQuery();
@@ -106,7 +135,7 @@ public class Employee {
                 System.out.println("Employee with most projects: "+depart_name);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Department.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         } finally {
             if (add != null) {
                 add.close();

@@ -18,12 +18,4 @@ public class Employee_on_limited_time {
     public Employee_on_limited_time(){
         super();
     }
-    
-    public void insertSQL(String employee_name,int months,int project_id){
-        String addEmployee="";
-    }
-    
-    public void deleteSQL(int id){
-        String deleteEmployee="";
-    }
 }

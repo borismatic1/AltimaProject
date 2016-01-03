@@ -9,11 +9,11 @@ import communication.ConnectionDatabase;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
- *
+ * Class for assigning projects to employees
  * @author Win7
  */
 public class AssignProject {
@@ -26,12 +26,22 @@ public class AssignProject {
         super();
     }
 
+    private static final Logger log = LogManager.getLogger(Department.class);
+    
+    /**
+     * Method for assigning projects to employees.
+     *
+     * @param projID id of project
+     * @param employID name of employee
+     * @throws SQLException exception handling
+     */
     public void assignProject(int projID, int employID) throws SQLException {
         Connection cd = new ConnectionDatabase().connect();
         String insertSQL = "INSERT INTO assign_project\n"
                 + "(project_id, employee_id)\n"
                 + "VALUES(?,?)";
 
+        log.info(insertSQL);
         PreparedStatement add = cd.prepareStatement(insertSQL);
         try {
             cd.setAutoCommit(false);
@@ -41,7 +51,7 @@ public class AssignProject {
             cd.commit();
             System.out.println("Successful entry!");
         } catch (SQLException ex) {
-            Logger.getLogger(Department.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         } finally {
             if (add != null) {
                 add.close();

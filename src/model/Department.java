@@ -6,16 +6,15 @@
 package model;
 
 import communication.ConnectionDatabase;
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * Class for manipulating Department data
  * @author Win7
  */
 public class Department {
@@ -27,13 +26,21 @@ public class Department {
         super();
     }
 
+    private static final Logger log = LogManager.getLogger(Department.class);
     
+    /**
+     * Add data to department table in database.
+     *
+     * @param department_name name of department
+     * @throws SQLException exception handling
+     */
     public void insertSQL(String department_name) throws SQLException {
         Connection cd = new ConnectionDatabase().connect();
         String addDepartment = "INSERT INTO department\n"
                 + "(department_name)\n"
                 + "VALUES(?)";
 
+        log.info(addDepartment);
         PreparedStatement add = null;
         try {
             cd.setAutoCommit(false);
@@ -58,6 +65,12 @@ public class Department {
         }
     }
 
+    /**
+     * Delete data from department table in database.
+     *
+     * @param id id of department
+     * @throws SQLException exception handling
+     */
     public void deleteSQL(int id) throws SQLException {
         Connection cd = new ConnectionDatabase().connect();
         String deleteDepartment = "DELETE FROM department\n"
@@ -83,6 +96,11 @@ public class Department {
         }
     }
 
+    /**
+     * Finds department with biggest number of employees
+     *
+     * @throws SQLException exception handling
+     */
     public void largestDepartment() throws SQLException {
         Connection cd = new ConnectionDatabase().connect();
         String largestDepartment = "select department_name \n"

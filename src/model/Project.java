@@ -10,10 +10,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
- *
+ * Class for manipulating Project data
  * @author Win7
  */
 public class Project {
@@ -21,18 +22,25 @@ public class Project {
     private int id;
     private String project_name;
 
-    
-
     public Project() {
         super();
     }
 
+    private static final Logger log = LogManager.getLogger(Department.class);
+    
+    /**
+     * Add data to project table in database.
+     *
+     * @param name name of project
+     * @throws SQLException exception handling
+     */
     public void insertSQL(String name) throws SQLException {
         Connection cd = new ConnectionDatabase().connect();
         String addProject = "INSERT INTO project\n"
                 + "(project_name)\n"
                 + "VALUES(?)";
 
+        log.info(addProject);
         PreparedStatement add = cd.prepareStatement(addProject);
         try {
             cd.setAutoCommit(false);
@@ -41,7 +49,7 @@ public class Project {
             cd.commit();
             System.out.println("Successful entry!");
         } catch (SQLException ex) {
-            Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         } finally {
             if (add != null) {
                 add.close();
@@ -54,11 +62,18 @@ public class Project {
 
     }
 
+    /**
+     * Delete data from project table in database.
+     *
+     * @param id id of project
+     * @throws SQLException exception handling
+     */
     public void deleteSQL(int id) throws SQLException {
         Connection cd = new ConnectionDatabase().connect();
         String deleteProject = "DELETE FROM  \"public\".project\n"
                 + "WHERE id=(?)";
         
+        log.info(deleteProject);
         PreparedStatement add = null;
         try {
             cd.setAutoCommit(false);
@@ -68,7 +83,7 @@ public class Project {
             cd.commit();
             System.out.println("Successful delete!");
         } catch (SQLException ex) {
-            Logger.getLogger(Department.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         } finally {
             if (add != null) {
                 add.close();
